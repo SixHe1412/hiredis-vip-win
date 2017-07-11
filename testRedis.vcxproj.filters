@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="hiredis">
+      <UniqueIdentifier>{6825977b-60ec-452e-a116-67951d7032a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="hiredis\adlist.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\async.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\command.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\crc16.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\dict.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\hiarray.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\hircluster.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\hiredis.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\hiutil.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\net.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\read.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="hiredis\sds.c">
+      <Filter>hiredis</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hiredis\win32ex.h">
+      <Filter>hiredis</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
