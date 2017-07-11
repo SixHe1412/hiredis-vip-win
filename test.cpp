@@ -45,7 +45,6 @@ redisClusterContext* connRedisCluster(const char* addr)
 	redisClusterContext *cc = redisClusterConnect(addr, HIRCLUSTER_FLAG_NULL);
 	if (cc != NULL && cc->err) {
 		printf("Error: %s\n", cc->errstr);
-		// handle error
 	}
 		
 	return cc;
@@ -132,12 +131,12 @@ int main(int argc, char *argv[])
 	ifstream fin(szinput);  //"E:/pyProject/hiredis-vip-win/range.txt"
 	fout.open(szoutput);
 
-	/*if (!fin.is_open() || !fout.is_open())
+	if (!fin.is_open() || !fout.is_open())
 	{
 		cout << "open file failed.	" << endl
 			<< "programing terminate." << endl;
 		return(EXIT_FAILURE);
-	}*/
+	}
 
 	string s;
 	int count = 0;
@@ -164,6 +163,5 @@ int main(int argc, char *argv[])
 
 	redisClusterFree(cc);
 	
-
 	return 0;
 }
