@@ -34,51 +34,30 @@ FILE* __cdecl __iob_func(unsigned i) {
 void PrintTime()
 {
 	SYSTEMTIME sys;
-	GetLocalTime( &sys );
-	printf( "%d.%d.%d\n", sys.wMinute, sys.wSecond, sys.wMilliseconds);
+	GetLocalTime(&sys);
+	printf("%d.%d.%d\n", sys.wMinute, sys.wSecond, sys.wMilliseconds);
 }
 
-ofstream fout;
 
 redisClusterContext* connRedisCluster(const char* addr)
 {
 	redisClusterContext *cc = redisClusterConnect(addr, HIRCLUSTER_FLAG_NULL);
 	if (cc != NULL && cc->err) {
 		printf("Error: %s\n", cc->errstr);
+		// handle error
 	}
-		
+
 	return cc;
 }
 
-void queryRedis(redisClusterContext *cc, std::vector<std::string> res)
-{
-	redisReply * reply;
-    
-	reply = (redisReply *)redisClusterCommand(cc, "zrangebyscore 15_lvl %s %s", res.at(0).c_str(), res.at(1).c_str());
-	
-	if (reply == NULL)
-	{
-		redisClusterFree(cc);
-		return;
-	}
-
-	for (int i = 0; i < reply->elements; i++)
-	{
-		fout << reply->element[i]->str;
-		cout << "running......" << endl;
-	}
-		
-	freeReplyObject(reply);
-
-}
-
-
 std::vector<std::string> split(std::string str, std::string pattern)
 {
+
 	std::string::size_type pos;
 	std::vector<std::string> result;
 	str += pattern;//扩展字符串以方便操作
 	int size = str.size();
+	//int size = strlen(str);
 
 	for (int i = 0; i<size; i++)
 	{
@@ -128,22 +107,39 @@ int main(int argc, char *argv[])
 	redisClusterContext *cc;
 	cc = connRedisCluster("192.168.0.20:7006,192.168.0.27:7000,192.168.0.28:7001,192.168.0.29:7002,192.168.0.31:7004,192.168.0.32:7005");
 
-	ifstream fin(szinput);  //"E:/pyProject/hiredis-vip-win/range.txt"
-	fout.open(szoutput);
-
-	if (!fin.is_open() || !fout.is_open())
+	FILE *fin = NULL;  //"E:/pyProject/hiredis-vip-win/range.txt"
+	if (strlen(szinput) != 0)
 	{
-		cout << "open file failed.	" << endl
-			<< "programing terminate." << endl;
-		return(EXIT_FAILURE);
+		fin = fopen(szinput, "r");
+	}
+	else
+	{
+		fin = stdin;
 	}
 
+	std::ostream* out_s;
+	ofstream fout;
+	if (strlen(szoutput) != 0)
+	{
+		fout.open(szoutput);
+		out_s = &fout;
+	}
+	else
+	{
+		out_s = &cout;
+	}
+
+
+	char line[50] = { 0 };
 	string s;
 	int count = 0;
-	while (getline(fin, s))
-	{		
+	while (1)
+	{
+		if (fgets(line, 1024, fin) == NULL) break;
+		s = line;
+		s = s.substr(0, s.length() - 1);
 		std::vector<std::string> res = split(s, ",");
-		redisClusterAppendCommand(cc, "zrangebyscore %s %s %s",lvl, res.at(0).c_str(), res.at(1).c_str());
+		redisClusterAppendCommand(cc, "zrangebyscore %s %s %s", lvl, res.at(0).c_str(), res.at(1).c_str());
 		count++;
 		//queryRedis(cc, res);
 	}
@@ -153,15 +149,16 @@ int main(int argc, char *argv[])
 		redisClusterGetReply(cc, (void **)&reply);
 		for (int j = 0; j < reply->elements; j++)
 		{
-			fout << reply->element[j]->str;
+			(*out_s) << reply->element[j]->str;
 		}
 		freeReplyObject(reply);
 	}
 	redisClusterReset(cc);
-	fin.close();
-	fout.close();
+	//fin.close();
+	//fout.close();
 
 	redisClusterFree(cc);
-	
+
+
 	return 0;
 }
